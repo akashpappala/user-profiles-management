@@ -1,61 +1,26 @@
-import { useState } from 'react';
-import { UserProvider, useUsers } from './context/UserContext';
-import Header from './components/Header';
-import UserList from './components/UserList';
-import UserModal from './components/UserModal';
-import LoadingSpinner from './components/LoadingSpinner';
-import ErrorAlert from './components/ErrorAlert';
+import React, { useState } from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { UserProvider, useUsers } from "./context/UserContext";
+import AppHeader from "./components/AppHeader";
+import UsersTable from "./components/UsersTable";
+import AddUserModal from "./components/AddUserModal";
+import MyProfile from "./components/MyProfile";
 
-function AppContent() {
-  const { users, loading, error, setError, addUser, updateUser, deleteUser } = useUsers();
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editingUser, setEditingUser] = useState(null);
+function UsersPage() {
+  const { users, addUser, deleteUser } = useUsers();
+  const [modalOpen, setModalOpen] = useState(false);
 
-  const handleAddClick = () => {
-    setEditingUser(null);
-    setIsModalOpen(true);
+  const handleOpenModal = () => setModalOpen(true);
+  const handleSubmit = (userData) => {
+    addUser(userData);
+    setModalOpen(false);
   };
-
-  const handleEditClick = (user) => {
-    setEditingUser(user);
-    setIsModalOpen(true);
-  };
-
-  const handleModalClose = () => {
-    setIsModalOpen(false);
-    setEditingUser(null);
-  };
-
-  const handleSubmit = async (formData) => {
-    if (editingUser) {
-      await updateUser(editingUser.id, formData);
-    } else {
-      await addUser(formData);
-    }
-    handleModalClose();
-  };
-
-  const handleDelete = async (id) => {
-    if (window.confirm('Are you sure you want to delete this user?')) {
-      await deleteUser(id);
-    }
-  };
+  const handleCloseModal = () => setModalOpen(false);
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <Header onAddClick={handleAddClick} />
-      <div className="pb-8">
-        <ErrorAlert message={error} onDismiss={() => setError(null)} />
-        {loading && <LoadingSpinner />}
-        {!loading && <UserList users={users} onEdit={handleEditClick} onDelete={handleDelete} />}
-      </div>
-      <UserModal
-        isOpen={isModalOpen}
-        onClose={handleModalClose}
-        onSubmit={handleSubmit}
-        user={editingUser}
-        loading={loading}
-      />
+    <div className="p-8 max-w-5xl mx-auto">
+      <UsersTable users={users} onOpenModal={handleOpenModal} onDelete={deleteUser} />
+      <AddUserModal open={modalOpen} onClose={handleCloseModal} onSubmit={handleSubmit} editingUser={null} />
     </div>
   );
 }
@@ -63,7 +28,15 @@ function AppContent() {
 export default function App() {
   return (
     <UserProvider>
-      <AppContent />
+      <Router>
+        <div className="min-h-screen bg-gray-50">
+          <AppHeader />
+          <Routes>
+            <Route path="/" element={<UsersPage />} />
+            <Route path="/profile/:id" element={<MyProfile />} />
+          </Routes>
+        </div>
+      </Router>
     </UserProvider>
   );
 }

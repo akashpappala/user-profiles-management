@@ -1,60 +1,47 @@
 import React, { createContext, useContext, useState } from 'react';
-import { useLocalStorage } from '../hooks/useLocalStorage';
 import { initialUsers } from '../data';
 
 const UserContext = createContext();
 
 export function UserProvider({ children }) {
-  const [users, setUsers] = useLocalStorage('users', initialUsers);
+  const [users, setUsers] = useState(() => {
+    const saved = localStorage.getItem('users');
+    return saved ? JSON.parse(saved) : initialUsers;
+  });
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
 
-  const addUser = async (userData) => {
-    setLoading(true);
-    setError(null);
-    try {
-      await new Promise(resolve => setTimeout(resolve, 800));
-      const newUser = {
-        id: Date.now(),
-        ...userData,
-        avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${userData.name}`
-      };
-      setUsers([...users, newUser]);
-    } catch (err) {
-      setError('Failed to add user');
-    } finally {
-      setLoading(false);
-    }
+  const saveUsers = (newUsers) => {
+    setUsers(newUsers);
+    localStorage.setItem('users', JSON.stringify(newUsers));
   };
 
-  const updateUser = async (id, userData) => {
+  const addUser = (userData) => {
     setLoading(true);
-    setError(null);
-    try {
-      await new Promise(resolve => setTimeout(resolve, 800));
-      setUsers(users.map(u => u.id === id ? { ...u, ...userData } : u));
-    } catch (err) {
-      setError('Failed to update user');
-    } finally {
+    setTimeout(() => {
+      const newUser = { id: Date.now(), ...userData };
+      saveUsers([...users, newUser]);
       setLoading(false);
-    }
+    }, 500);
   };
 
-  const deleteUser = async (id) => {
+  const updateUser = (id, userData) => {
     setLoading(true);
-    setError(null);
-    try {
-      await new Promise(resolve => setTimeout(resolve, 500));
-      setUsers(users.filter(u => u.id !== id));
-    } catch (err) {
-      setError('Failed to delete user');
-    } finally {
+    setTimeout(() => {
+      saveUsers(users.map(u => u.id === id ? { ...u, ...userData } : u));
       setLoading(false);
-    }
+    }, 500);
+  };
+
+  const deleteUser = (id) => {
+    setLoading(true);
+    setTimeout(() => {
+      saveUsers(users.filter(u => u.id !== id));
+      setLoading(false);
+    }, 500);
   };
 
   return (
-    <UserContext.Provider value={{ users, loading, error, setError, addUser, updateUser, deleteUser }}>
+    <UserContext.Provider value={{ users, loading, addUser, updateUser, deleteUser }}>
       {children}
     </UserContext.Provider>
   );

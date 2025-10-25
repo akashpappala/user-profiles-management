@@ -1,26 +1,50 @@
 export const initialUsers = [
   {
     id: 1,
-    name: "John Doe",
-    email: "john@example.com",
-    role: "Developer",
-    status: "Active",
-    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=John"
+    name: 'Dave Richards',
+    email: 'dave@mail.com',
+    contact: '+91 8332883854',
+    firstName: 'Dave',
+    lastName: 'Richards',
+    yearOfBirth: '1995',
+    gender: 'Male',
+    phoneNumber: '8332883854',
+    alternatePhone: '',
+    address: '123 Main Street',
+    pincode: '560001',
+    domicileState: 'Karnataka',
+    domicileCountry: 'India'
   },
   {
     id: 2,
-    name: "Jane Smith",
-    email: "jane@example.com",
-    role: "Designer",
-    status: "Active",
-    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Jane"
+    name: 'Abhishek Hari',
+    email: 'hari@mail.com',
+    contact: '+91 9876543210',
+    firstName: 'Abhishek',
+    lastName: 'Hari',
+    yearOfBirth: '1996',
+    gender: 'Male',
+    phoneNumber: '9876543210',
+    alternatePhone: '',
+    address: '456 Second Street',
+    pincode: '600001',
+    domicileState: 'Tamil Nadu',
+    domicileCountry: 'India'
   },
   {
     id: 3,
-    name: "Bob Johnson",
-    email: "bob@example.com",
-    role: "Manager",
-    status: "Inactive",
-    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Bob"
+    name: 'Nishta Gupta',
+    email: 'nishta@mail.com',
+    contact: '+91 8765432109',
+    firstName: 'Nishta',
+    lastName: 'Gupta',
+    yearOfBirth: '1997',
+    gender: 'Female',
+    phoneNumber: '8765432109',
+    alternatePhone: '',
+    address: '789 Third Street',
+    pincode: '110001',
+    domicileState: 'Delhi',
+    domicileCountry: 'India'
   }
 ];
